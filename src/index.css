@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-foundry-canvas: #0B0D0F;
+  --color-foundry-nav: #101214;
+  --color-foundry-panels: #17191C;
+  --color-foundry-surfaces: #202327;
+  --color-foundry-borders: #292C30;
+  --color-foundry-primary-text: #F5F5F5;
+  --color-foundry-secondary-text: #8B929C;
+  --color-foundry-selection: #BCE5F8;
+  --color-foundry-success: #39E58C;
+}
+
+body {
+  background-color: #0B0D0F;
+  color: #F5F5F5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}

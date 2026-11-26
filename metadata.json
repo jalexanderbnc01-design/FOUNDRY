@@ -1,0 +1,8 @@
+{
+  "name": "Foundry",
+  "description": "Foundry is a modular, AI-ready infinite workspace for creative development, research, education, engineering, and project management. It combines an infinite canvas, real-time collaboration, drawing and vector tools, interactive HTML rendering, document organization, connected objects, and 3D perspective visualization with a refined professional dark interface.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

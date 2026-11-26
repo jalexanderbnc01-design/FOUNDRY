@@ -1,0 +1,1173 @@
+# FOUNDRY — STAGE 1: WORKSPACE FOUNDATION
+
+## Project Objective
+
+Develop Foundry into a stable, modular, extensible infinite workspace platform by completing all five foundational development phases.
+
+- Phase 01 — Foundry Foundation
+- Phase 02 — Controller Integration
+- Phase 03 — Window Management
+- Phase 04 — Application Registry
+- Phase 05 — Communication Bridge
+
+Complete these phases in sequential dependency order within the existing Foundry codebase.
+
+Do not rebuild the application from scratch. Inspect the current implementation, identify reusable components, and preserve all working functionality.
+
+---
+
+# PHASE 01 — FOUNDRY FOUNDATION
+
+## 1.1 Existing System Audit
+
+Before implementing changes, inspect the entire application architecture.
+
+Identify:
+
+- Frontend framework.
+- Backend services.
+- Canvas rendering engine.
+- Object management system.
+- State management.
+- Existing window management.
+- HTML rendering system.
+- Collaboration infrastructure.
+- Persistence services.
+- Existing AI components.
+- Event listeners.
+- Pointer and keyboard handlers.
+- API endpoints.
+- Existing dependencies.
+
+Create an internal implementation plan identifying which components should be preserved, extended, consolidated, or created.
+
+Avoid duplicate services.
+
+## 1.2 Preserve Existing Whiteboard Functionality
+
+Maintain all existing capabilities:
+
+- Infinite canvas.
+- Canvas pan and zoom.
+- Drawing tools.
+- Vector tools.
+- Sticky notes.
+- Shapes.
+- Text objects.
+- Connectors.
+- Frames.
+- Groups.
+- Object selection.
+- Multi-object selection.
+- HTML upload.
+- Clipboard import.
+- Interactive HTML rendering.
+- HTML rasterization.
+- 3D perspective tilt.
+- Grid.
+- Snapping.
+- Alignment guides.
+- Minimap.
+- Comments.
+- Real-time collaboration.
+- Workspace persistence.
+- Existing export capabilities.
+
+Do not replace the canvas engine unless a critical technical issue requires it.
+
+## 1.3 Foundry Design System
+
+Maintain a consistent dark, minimal visual identity.
+
+| Element | Color |
+|---|---|
+| Primary background | #0B0D0F |
+| Navigation background | #101214 |
+| Panel background | #17191C |
+| Interactive surfaces | #202327 |
+| Borders | #292C30 |
+| Primary text | #F5F5F5 |
+| Secondary text | #8B929C |
+| Active selection | #BCE5F8 |
+| Success indicator | #39E58C |
+
+Design requirements:
+
+- Compact monochromatic outline icons.
+- Light-blue active states.
+- Subtle borders.
+- Consistent typography.
+- Minimal rounded surfaces.
+- Dark dotted-grid canvas.
+- Minimal visual noise.
+- No unnecessary decorative panels.
+- Maximum available canvas space.
+
+Use centralized theme variables instead of scattering hardcoded colors throughout the application.
+
+## 1.4 Core Architecture
+
+Establish or consolidate the following systems:
+
+| System | Responsibility |
+|---|---|
+| Canvas Engine | Canvas rendering and transformations |
+| Object Manager | Canvas object lifecycle |
+| Selection Manager | Object selection and manipulation |
+| Workspace Manager | Workspace organization |
+| Theme Manager | Shared visual styling |
+| Window Manager | Floating interface management |
+| Application Registry | Application discovery and registration |
+| Event Bus | Internal event distribution |
+| Communication Bridge | Cross-module messaging |
+| Shared State Manager | Shared workspace context |
+| Persistence Manager | Saving and restoring state |
+| Permission Manager | Operation authorization |
+| Diagnostics Manager | System health and execution reporting |
+
+Reuse existing implementations where possible.
+
+---
+
+# PHASE 02 — EDUCATION CONTROLLER INTEGRATION
+
+## 2.1 Integration Package
+
+Use the supplied Foundry Education Controller package.
+
+Expected files:
+
+- `foundry-education-controller.mjs`
+- `foundry-controller-preview.html`
+- `FOUNDRY_CONTROLLER_README.md`
+
+Inspect the actual exported module API before integration.
+
+Use `mountEducationController()` to initialize the supplied controller if confirmed by the module.
+
+Do not recreate the Education Controller using new React components or generate a replacement interface.
+
+## 2.2 Mounting Architecture
+
+Mount the Education Controller in a dedicated viewport-level overlay layer above the Foundry canvas.
+
+Maintain separate layers:
+
+```text
+Foundry Root
+├── Canvas Layer
+│   ├── Grid
+│   ├── Drawing Objects
+│   ├── Frames
+│   ├── Connections
+│   └── Interactive HTML Objects
+│
+├── Canvas Tools Layer
+│
+├── Floating Workspace Layer
+│   ├── Education Controller
+│   ├── External Application Panels
+│   └── Future Controllers
+│
+├── Dialog Layer
+└── Notification Layer
+```
+
+The floating workspace layer must remain independent of canvas transformations.
+
+Canvas panning, zooming, and perspective changes must not move or scale the Education Controller.
+
+## 2.3 Default Controller Placement
+
+Position the Education Controller in the upper-left region of the Foundry workspace.
+
+The controller should:
+
+- Open at its compact default dimensions.
+- Fit within the available viewport.
+- Preserve its original proportions where practical.
+- Remain draggable.
+- Remain independently resizable.
+- Remember its saved position and dimensions.
+
+Do not add an external title bar, border, window frame, or duplicate control system.
+
+## 2.4 Preserve Controller Functionality
+
+Preserve the supplied controller's existing features:
+
+- White minimize and restore dot.
+- Blue expand and restore dot.
+- Navigation-only minimized mode.
+- Draggable positioning.
+- External L-shaped resize handle.
+- Independent width and height resizing.
+- Middle divider resizing.
+- Expandable navigation menu.
+- Course selection menu.
+- Profile panel.
+- Session timer and projects.
+- AI Chat.
+- Knowledge Base.
+- App Library.
+- Account Settings.
+- AI Management Settings.
+
+Preserve the existing educational applications:
+
+- Choice Board Studio.
+- Essay to Slides.
+- Countdown.
+- Finals Study Guide.
+- Digital Flashcards Studio.
+- Student Command Center.
+- Universal Design Lesson Planner.
+
+Do not mark applications or external integrations as operational if they are only prototypes.
+
+## 2.5 External Companion Panels
+
+All companion application panels must open outside the main Education Controller.
+
+Requirements:
+
+- Default 24px separation.
+- Independent dimensions.
+- Independent resize controls.
+- No parent controller scrollbars.
+- No automatic enlargement of the main controller.
+- No clipping inside the controller iframe.
+- No duplicate application instances.
+- Preserve application state when hidden.
+- Maintain logical relationships with their parent controller.
+
+The profile and session timer panel should also open externally.
+
+When available space is limited, calculate an alternate visible position rather than creating unwanted parent scrolling.
+
+## 2.6 Central AI Entry Point
+
+The existing Education AI Chat must become Foundry's primary AI interface.
+
+Route the native Foundry AI button to the supplied controller's `openAI()` method, if available.
+
+If the controller is minimized:
+
+1. Restore the controller.
+2. Open AI Chat.
+3. Bring the controller into focus.
+
+Do not create a second AI chat interface.
+
+Do not connect new AI providers during Stage 1.
+
+---
+
+# PHASE 03 — WINDOW MANAGEMENT
+
+## 3.1 Unified Window Manager
+
+Implement or consolidate a single Foundry Window Manager responsible for all viewport-level floating interfaces.
+
+The manager should coordinate existing controller behaviors rather than duplicating their event handlers.
+
+Window registration should support:
+
+```json
+{
+  "windowId": "education-controller-main",
+  "appId": "education-controller",
+  "parentWindowId": null,
+  "displayMode": "floating",
+  "position": {
+    "x": 24,
+    "y": 48
+  },
+  "size": {
+    "width": 900,
+    "height": 540
+  },
+  "state": "normal",
+  "visible": true,
+  "focused": false,
+  "zIndex": 100,
+  "resizable": true,
+  "draggable": true
+}
+```
+
+These dimensions are initial examples. Adapt them to the actual viewport and existing module defaults.
+
+## 3.2 Window Lifecycle
+
+Support:
+
+- Register.
+- Mount.
+- Show.
+- Hide.
+- Focus.
+- Blur.
+- Move.
+- Resize.
+- Minimize.
+- Restore.
+- Expand.
+- Dock.
+- Undock.
+- Destroy.
+
+Provide controlled lifecycle methods such as:
+
+```javascript
+windowManager.register(config)
+windowManager.open(windowId)
+windowManager.close(windowId)
+windowManager.focus(windowId)
+windowManager.move(windowId, position)
+windowManager.resize(windowId, size)
+windowManager.minimize(windowId)
+windowManager.restore(windowId)
+windowManager.expand(windowId)
+windowManager.getWindow(windowId)
+windowManager.getWindows()
+windowManager.resetLayout(windowId)
+```
+
+Adapt method names to existing conventions where appropriate.
+
+## 3.3 Dragging
+
+Floating interfaces should support reliable pointer-based dragging.
+
+Requirements:
+
+- Use pointer capture.
+- Preserve the original pointer offset.
+- Prevent unintended canvas movement.
+- Prevent dragging when interacting with application inputs.
+- Maintain usable positioning within the viewport.
+- Save final coordinates after dragging ends.
+- Remove temporary listeners after completion.
+
+Do not create conflicting drag controllers.
+
+## 3.4 Resizing
+
+Support independent width and height resizing.
+
+Use:
+
+- External L-shaped corner handles.
+- Minimum and maximum dimension constraints.
+- Responsive internal content.
+- Pointer capture.
+- Stable resize calculations from the initial dimensions.
+- Persistent final dimensions.
+
+Resize handles must not obstruct Help, Tips, navigation, or other interactive controls.
+
+Internal panel dividers must remain independent of outer window resizing.
+
+## 3.5 Minimize and Restore
+
+For the Education Controller:
+
+- Minimize into the original vertical navigation rail.
+- Keep the white and blue controls visible.
+- Preserve navigation icons.
+- Preserve clock and status information.
+- Hide associated companion panels without destroying their state.
+- Restore the previous dimensions when reopened.
+
+Other future applications may use different minimized representations.
+
+## 3.6 Focus and Layer Management
+
+Implement consistent window layering.
+
+Requirements:
+
+- Clicking a window brings it forward.
+- Active windows receive appropriate focus.
+- Dialogs appear above application windows.
+- Context menus appear above their associated interfaces.
+- Resize handles remain accessible.
+- Hidden windows must not intercept pointer events.
+- Floating panels must not block the entire canvas.
+
+Only visible window surfaces should intercept canvas interactions.
+
+## 3.7 Companion Window Relationships
+
+Support parent-child window relationships.
+
+```text
+Education Controller
+├── Choice Board
+├── Essay to Slides
+├── Countdown
+├── Finals Study Guide
+├── Digital Flashcards
+├── Student Command Center
+├── Lesson Planner
+└── Profile and Session Timer
+```
+
+Child windows should retain their own dimensions, placement, visibility, and application state.
+
+When the parent is minimized, hide associated children.
+
+When the parent is restored, restore the appropriate previously visible children.
+
+Avoid creating duplicate copies of the same application.
+
+## 3.8 Window Persistence
+
+Save window preferences locally using the existing persistence system where possible.
+
+Persist:
+
+- Position.
+- Width.
+- Height.
+- Minimized state.
+- Previous expanded dimensions.
+- Internal divider positions.
+- Docking preferences.
+- Open application IDs.
+
+Validate saved values when restoring layouts.
+
+Handle viewport changes and invalid saved positions without placing windows permanently off-screen.
+
+---
+
+# PHASE 04 — APPLICATION REGISTRY
+
+## 4.1 Central Application Registry
+
+Create a single application registry responsible for discovering, identifying, launching, and managing Foundry applications.
+
+Do not require an application to be AI-connected before it can be registered.
+
+Every application should have a standardized manifest.
+
+## 4.2 Application Manifest
+
+Use a structure similar to:
+
+```json
+{
+  "id": "digital-flashcards",
+  "name": "Digital Flashcards Studio",
+  "description": "Course flashcards, quizzes and study analytics.",
+  "category": "education",
+  "version": "1.0.0",
+  "host": "education-controller",
+  "status": "installed",
+  "enabled": true,
+  "displayModes": [
+    "companion"
+  ],
+  "defaultWindow": {
+    "width": 420,
+    "height": 600,
+    "resizable": true,
+    "draggable": false
+  },
+  "capabilities": [],
+  "plannedCapabilities": [
+    "create_deck",
+    "import_material",
+    "start_study",
+    "start_quiz"
+  ],
+  "ai": {
+    "enabled": false,
+    "connected": false
+  },
+  "dependencies": []
+}
+```
+
+Only register capabilities as executable after confirming that working handlers exist.
+
+Keep planned capabilities separate from operational capabilities.
+
+## 4.3 Register Existing Applications
+
+Register the following applications and modules:
+
+| Application ID | Application |
+|---|---|
+| education-controller | Education Controller |
+| education-ai | Education AI Chat |
+| knowledge-base | Knowledge Base |
+| choice-board | Choice Board Studio |
+| essay-to-slides | Essay to Slides |
+| countdown | Countdown |
+| finals-study-guide | Finals Study Guide |
+| digital-flashcards | Digital Flashcards Studio |
+| student-command-center | Student Command Center |
+| udl-lesson-planner | Universal Design Lesson Planner |
+| session-timer | Session Timer and Projects |
+| education-settings | Education Settings |
+
+Register Teaching Deck Assistant as planned or not installed if no functional application currently exists.
+
+Do not fabricate installation status.
+
+## 4.4 Registry Operations
+
+Support operations equivalent to:
+
+```javascript
+appRegistry.register(manifest)
+appRegistry.unregister(appId)
+appRegistry.get(appId)
+appRegistry.list()
+appRegistry.search(query)
+appRegistry.launch(appId, options)
+appRegistry.close(appId)
+appRegistry.getCapabilities(appId)
+appRegistry.getStatus(appId)
+appRegistry.isInstalled(appId)
+```
+
+Support application state changes:
+
+- Not installed.
+- Installed.
+- Available.
+- Running.
+- Hidden.
+- Disabled.
+- Error.
+- Requires configuration.
+
+Status must reflect actual runtime conditions.
+
+## 4.5 Application Launching
+
+The application registry should communicate with the Window Manager when launching applications.
+
+```text
+Application Launch Request
+         ↓
+Application Registry
+         ↓
+Validate Application
+         ↓
+Resolve Existing Instance
+         ↓
+Window Manager
+         ↓
+Mount or Restore Application
+         ↓
+Return Execution Result
+```
+
+Use an adapter for applications that are still managed internally by the Education Controller.
+
+Do not duplicate their existing launch logic.
+
+## 4.6 Application Display Modes
+
+Prepare the registry to describe these display modes:
+
+- Controller.
+- Floating.
+- Companion.
+- Canvas object.
+- Docked.
+- Embedded.
+
+Only enable display modes supported by the current application.
+
+Do not implement unsupported canvas embedding merely to populate the registry.
+
+## 4.7 Application Management Interface
+
+Provide an application management section in Foundry Settings.
+
+Display:
+
+- Application name.
+- Application ID.
+- Version.
+- Category.
+- Installation status.
+- Running status.
+- Supported display modes.
+- Available capabilities.
+- Connection status.
+- Dependencies.
+- Recent errors.
+
+Include working controls to open, focus, hide, or inspect registered applications where supported.
+
+---
+
+# PHASE 05 — COMMUNICATION BRIDGE
+
+## 5.1 Shared Communication Architecture
+
+Create a standardized communication bridge between Foundry and its registered applications.
+
+```text
+Foundry Host
+      ↕
+Communication Bridge
+      ↕
+Application Registry
+      ↕
+Window Manager
+      ↕
+Education Controller
+      ↕
+Embedded Applications
+```
+
+Use a centralized internal Event Bus for native modules.
+
+Use validated `postMessage` communication or an equivalent secure transport for embedded iframe applications.
+
+Do not allow arbitrary applications to directly manipulate privileged host state.
+
+## 5.2 Standard Message Contract
+
+Every operation should use a consistent message envelope.
+
+```json
+{
+  "protocol": "foundry.bridge",
+  "version": 1,
+  "type": "request",
+  "requestId": "unique-request-id",
+  "source": "education-controller",
+  "target": "foundry-host",
+  "operation": "app.open",
+  "timestamp": 0,
+  "payload": {
+    "appId": "digital-flashcards"
+  }
+}
+```
+
+Return a corresponding structured response.
+
+```json
+{
+  "protocol": "foundry.bridge",
+  "version": 1,
+  "type": "response",
+  "requestId": "unique-request-id",
+  "source": "foundry-host",
+  "target": "education-controller",
+  "success": true,
+  "data": {
+    "appId": "digital-flashcards",
+    "status": "running"
+  },
+  "error": null
+}
+```
+
+These are protocol examples, not evidence that the operations have already succeeded.
+
+## 5.3 Bridge Responsibilities
+
+Implement:
+
+- Request validation.
+- Protocol version validation.
+- Source verification.
+- Target resolution.
+- Operation registration.
+- Permission checking.
+- Request routing.
+- Response correlation.
+- Timeout handling.
+- Duplicate-request protection.
+- Error reporting.
+- Execution tracing.
+- Lifecycle cleanup.
+
+Validate iframe message sources and permitted origins.
+
+For sandboxed frames with opaque origins, use explicitly registered frame references and a scoped communication handshake.
+
+Do not trust messages solely because they contain a recognized application ID.
+
+## 5.4 Bridge Operations
+
+Implement the foundational operations that can be supported by actual existing functionality.
+
+### System operations
+
+```text
+system.ping
+system.get_status
+system.get_version
+system.get_capabilities
+```
+
+### Application operations
+
+```text
+app.list
+app.get
+app.open
+app.close
+app.focus
+app.get_status
+app.get_capabilities
+```
+
+### Window operations
+
+```text
+window.list
+window.get
+window.show
+window.hide
+window.focus
+window.move
+window.resize
+window.minimize
+window.restore
+window.expand
+```
+
+### Workspace operations
+
+```text
+workspace.get_active
+workspace.get_context
+workspace.get_viewport
+```
+
+### Selection operations
+
+```text
+selection.get
+selection.count
+```
+
+### Controller operations
+
+```text
+controller.show
+controller.hide
+controller.open_section
+controller.open_ai
+controller.get_state
+```
+
+Register unsupported operations as unavailable or planned.
+
+Do not return fake successful results.
+
+## 5.5 Event Bus
+
+Establish shared event names for application and workspace changes.
+
+```text
+foundry:ready
+workspace:changed
+workspace:saved
+canvas:selection-changed
+canvas:viewport-changed
+app:registered
+app:opened
+app:closed
+app:error
+window:focused
+window:moved
+window:resized
+window:minimized
+window:restored
+controller:ready
+controller:visibility-changed
+course:changed
+bridge:request
+bridge:response
+bridge:error
+```
+
+Each event should include relevant identifiers, timestamp, source, and structured data.
+
+Avoid excessive event emissions during continuous dragging or resizing.
+
+Use throttling or batching where appropriate.
+
+## 5.6 Shared Workspace Context
+
+Create a lightweight shared context manager.
+
+Initial context may include:
+
+```json
+{
+  "workspaceId": null,
+  "workspaceName": null,
+  "activeCourseId": null,
+  "activeAssignmentId": null,
+  "activeApplicationId": null,
+  "focusedWindowId": null,
+  "selectedCanvasObjectIds": [],
+  "openApplicationIds": [],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  }
+}
+```
+
+Only populate values when the information is actually available.
+
+Do not fabricate course information, document contents, assignments, or canvas selections.
+
+This context manager will later support the AI orchestration system.
+
+## 5.7 Permissions Foundation
+
+Implement a basic operation permission layer.
+
+Supported permission states:
+
+- Allow.
+- Ask First.
+- Deny.
+- Unavailable.
+
+Permissions should cover:
+
+- Reading workspace information.
+- Reading canvas selections.
+- Opening applications.
+- Managing windows.
+- Reading application state.
+- Modifying shared state.
+- External communication.
+
+Default privileged operations to denied unless explicitly registered and authorized.
+
+Stage 1 must not enable unrestricted AI execution or destructive canvas operations.
+
+---
+
+# STAGE 1 — SETTINGS AND DIAGNOSTICS
+
+## Centralized Settings
+
+Extend existing Foundry Settings rather than creating a competing settings system.
+
+Include:
+
+### Workspace
+
+- Workspace preferences.
+- Default viewport.
+- Grid and snapping.
+- Persistence preferences.
+
+### Window Management
+
+- Default window dimensions.
+- Companion panel spacing.
+- Restore previous layout.
+- Reset window positions.
+- Window status.
+
+### Applications
+
+- Registered applications.
+- Installation status.
+- Runtime status.
+- Supported operations.
+
+### Communication Bridge
+
+- Bridge status.
+- Connected modules.
+- Protocol version.
+- Registered operations.
+- Recent requests.
+- Recent errors.
+
+### Permissions
+
+- Application permissions.
+- Operation permissions.
+- External communication restrictions.
+
+### Diagnostics
+
+- Canvas engine status.
+- Window Manager status.
+- Application Registry status.
+- Communication Bridge status.
+- Controller status.
+- Persistence status.
+- Event Bus status.
+
+Do not display a connected or healthy status until the relevant component has been verified.
+
+## Execution Log
+
+Create a bounded diagnostic activity log.
+
+Each record should contain:
+
+```json
+{
+  "id": "execution-id",
+  "timestamp": 0,
+  "source": "application-registry",
+  "operation": "app.open",
+  "target": "digital-flashcards",
+  "status": "success",
+  "durationMs": 0,
+  "message": "Application opened",
+  "error": null
+}
+```
+
+Record actual execution results.
+
+Do not log credentials, OAuth tokens, API keys, or unnecessary private document contents.
+
+Provide filters for:
+
+- All.
+- Information.
+- Success.
+- Warning.
+- Error.
+
+---
+
+# RECOMMENDED PROJECT ORGANIZATION
+
+Adapt this structure to the current framework rather than forcing unnecessary migrations.
+
+```text
+foundry/
+├── core/
+│   ├── workspace-manager
+│   ├── event-bus
+│   ├── context-manager
+│   └── shared-state
+│
+├── canvas/
+│   ├── canvas-engine
+│   ├── object-manager
+│   ├── selection-manager
+│   └── canvas-tools
+│
+├── windows/
+│   ├── window-manager
+│   ├── window-registry
+│   ├── drag-controller
+│   ├── resize-controller
+│   └── companion-manager
+│
+├── applications/
+│   ├── application-registry
+│   ├── manifests/
+│   ├── adapters/
+│   └── education-controller/
+│
+├── bridge/
+│   ├── communication-bridge
+│   ├── message-validator
+│   ├── operation-registry
+│   └── request-tracker
+│
+├── security/
+│   └── permission-manager
+│
+├── persistence/
+│   └── persistence-manager
+│
+├── diagnostics/
+│   ├── health-monitor
+│   └── execution-log
+│
+├── ui/
+│   ├── theme
+│   ├── navigation
+│   ├── toolbars
+│   ├── floating-layer
+│   └── settings
+│
+└── tests/
+```
+
+---
+
+# IMPLEMENTATION RESTRICTIONS
+
+1. Do not rebuild Foundry from scratch.
+2. Do not remove working whiteboard functionality.
+3. Do not recreate the supplied Education Controller.
+4. Do not introduce duplicate AI chat interfaces.
+5. Do not add unnecessary controller window frames.
+6. Do not treat the Education Controller as a normal canvas object.
+7. Do not introduce duplicate Window Managers.
+8. Do not introduce conflicting drag and resize controllers.
+9. Do not allow companion panels to create parent scrollbars.
+10. Do not simulate successful API connections.
+11. Do not fabricate application capabilities.
+12. Do not automatically execute unapproved privileged operations.
+13. Do not implement advanced AI orchestration during this stage.
+14. Do not introduce RAG, vector databases, or advanced AI memory during this stage.
+15. Do not unnecessarily redesign existing application interfaces.
+16. Do not expose secret credentials in frontend code.
+
+---
+
+# STAGE 1 — VALIDATION SCENARIOS
+
+Execute the following scenarios and report actual results.
+
+| ID | Test scenario | Expected result |
+|---|---|---|
+| F01 | Start Foundry | Application initializes correctly |
+| F02 | Pan canvas | Floating controller remains stationary |
+| F03 | Zoom canvas | Controller dimensions remain unchanged |
+| F04 | Draw canvas object | Drawing works normally |
+| F05 | Select canvas object | Selection works normally |
+| F06 | Import HTML | Existing HTML renderer operates |
+| F07 | Open Education Controller | One controller instance appears |
+| F08 | Drag controller | Position changes correctly |
+| F09 | Resize controller | Width and height update correctly |
+| F10 | Minimize controller | Navigation rail remains visible |
+| F11 | Restore controller | Previous dimensions return |
+| F12 | Expand controller | Expanded state works |
+| F13 | Resize middle divider | Internal panels resize independently |
+| F14 | Open Choice Board | External companion panel appears |
+| F15 | Resize companion panel | Main controller remains unchanged |
+| F16 | Open profile | Session timer opens externally |
+| F17 | Minimize with apps open | Companion panels hide without unloading |
+| F18 | Restore with apps open | Previous visible applications restore |
+| F19 | Click Foundry AI button | Existing Education AI Chat opens |
+| F20 | Launch registered app | Existing application instance opens |
+| F21 | Request unknown application | Structured error is returned |
+| F22 | Send valid bridge request | Correct correlated response is returned |
+| F23 | Send malformed request | Request is rejected safely |
+| F24 | Send unauthorized request | Permission layer denies operation |
+| F25 | Simulate request timeout | Timeout error is recorded |
+| F26 | Refresh application | Supported saved layouts restore |
+| F27 | Resize browser viewport | Windows remain recoverable |
+| F28 | Click outside controller | Canvas remains interactive |
+| F29 | Inspect diagnostics | Actual subsystem statuses appear |
+| F30 | Unmount controller | Listeners and resources are cleaned up |
+
+Test existing multiplayer synchronization and persistence separately using the application's real collaboration infrastructure.
+
+Record every test as:
+
+- Passed.
+- Failed.
+- Partially passed.
+- Blocked.
+- Not tested.
+
+Do not mark tests as passed based solely on code inspection.
+
+---
+
+# STAGE 1 — COMPLETION REPORT
+
+After implementation, provide a complete report containing:
+
+## 1. Executive Summary
+
+Describe what was implemented and the resulting system architecture.
+
+## 2. Phase Completion
+
+| Phase | Status | Evidence |
+|---|---|---|
+| 01 — Foundry Foundation | | |
+| 02 — Controller Integration | | |
+| 03 — Window Management | | |
+| 04 — Application Registry | | |
+| 05 — Communication Bridge | | |
+
+## 3. File Changes
+
+List every relevant created, modified, and removed file.
+
+Explain why each major change was necessary.
+
+## 4. System Inventory
+
+Report:
+
+- Registered applications.
+- Registered windows.
+- Registered bridge operations.
+- Registered events.
+- Implemented permissions.
+- Persistent settings.
+- Existing systems reused.
+- New systems introduced.
+
+## 5. Test Results
+
+Report all 30 validation scenarios and any additional tests.
+
+Include actual failures, blockers, and unresolved regressions.
+
+## 6. Known Limitations
+
+Identify:
+
+- Missing capabilities.
+- Unsupported application operations.
+- Unavailable integrations.
+- Prototype-only features.
+- Performance concerns.
+- Security concerns.
+- Unresolved UI issues.
+
+## 7. Stage 2 Readiness
+
+Determine whether the foundation is ready for:
+
+- Central AI Engine.
+- AI Provider Manager.
+- AI Tool Registry.
+- Context Manager expansion.
+- Permission Manager expansion.
+- AI Execution Monitor.
+
+Do not start Stage 2 automatically.
+
+---
+
+# FINAL GOAL
+
+At the completion of Stage 1, Foundry must operate as a stable modular infinite workspace with:
+
+- A preserved and functional whiteboard.
+- A consistent visual identity.
+- An integrated floating Education Controller.
+- Independent external companion applications.
+- A unified Window Manager.
+- A centralized Application Registry.
+- A validated Communication Bridge.
+- Shared workspace context.
+- Persistent interface state.
+- Foundational operation permissions.
+- Truthful diagnostics and execution reporting.
+- One primary AI Chat entry point.
+
+Foundry should be capable of hosting, discovering, launching, managing, and communicating with applications without requiring changes to its core canvas engine.
+
+Complete Stage 1, validate the results, document the limitations, and stop before implementing advanced AI infrastructure.
