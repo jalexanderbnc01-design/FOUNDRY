@@ -816,6 +816,12 @@ export class SharedDatabase {
     );
   }
 
+  public deleteNote(id: string): boolean {
+    if (!this.db) return false;
+    this.db.prepare("DELETE FROM notes WHERE id = ?").run(id);
+    return true;
+  }
+
   // --- Knowledge Documents ---
 
   public getDocuments(filter?: { courseId?: string; query?: string }): KnowledgeDocument[] {
@@ -1100,6 +1106,23 @@ export class SharedDatabase {
     );
   }
 
+  public getAllMemories(): AIMemoryRecord[] {
+    if (!this.db) return [];
+    const rows = this.db.prepare("SELECT * FROM memories ORDER BY updated_at DESC").all() as any[];
+    return rows.map((r) => ({
+      id: r.id,
+      type: r.type,
+      content: r.content,
+      scope: r.scope,
+      workspaceId: r.workspace_id,
+      courseId: r.course_id,
+      sourceConversationId: r.source_conversation_id,
+      status: r.status,
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+    }));
+  }
+
   public deleteMemory(id: string): boolean {
     if (!this.db) return false;
     this.db.prepare("DELETE FROM memories WHERE id = ?").run(id);
@@ -1193,6 +1216,290 @@ export class SharedDatabase {
       item.easeFactor,
       item.createdAt,
       item.updatedAt
+    );
+  }
+
+  public deleteFlashcardDeck(id: string): boolean {
+    if (!this.db) return false;
+    this.db.prepare("DELETE FROM flashcard_decks WHERE id = ?").run(id);
+    return true;
+  }
+
+  public deleteFlashcard(id: string): boolean {
+    if (!this.db) return false;
+    this.db.prepare("DELETE FROM flashcards WHERE id = ?").run(id);
+    return true;
+  }
+
+  // --- Study Guides, Presentations, Lessons, Choice Boards, Quizzes, Sessions ---
+
+  public getStudyGuides(courseId?: string): any[] {
+    if (!this.db) return [];
+    const sql = courseId
+      ? "SELECT * FROM study_guides WHERE course_id = ? ORDER BY updated_at DESC"
+      : "SELECT * FROM study_guides ORDER BY updated_at DESC";
+    const stmt = this.db.prepare(sql);
+    const rows = (courseId ? stmt.all(courseId) : stmt.all()) as any[];
+    return rows.map((r) => ({
+      id: r.id,
+      courseId: r.course_id,
+      title: r.title,
+      content: r.content,
+      sections: JSON.parse(r.sections_json || "[]"),
+      sourceDocumentIds: JSON.parse(r.source_document_ids_json || "[]"),
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+    }));
+  }
+
+  public upsertStudyGuide(guide: any): void {
+    if (!this.db) return;
+    this.db.prepare(`
+      INSERT INTO study_guides (id, course_id, title, content, sections_json, source_document_ids_json, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        course_id=excluded.course_id,
+        title=excluded.title,
+        content=excluded.content,
+        sections_json=excluded.sections_json,
+        source_document_ids_json=excluded.source_document_ids_json,
+        updated_at=excluded.updated_at
+    `).run(
+      guide.id,
+      guide.courseId,
+      guide.title,
+      guide.content || "",
+      JSON.stringify(guide.sections || []),
+      JSON.stringify(guide.sourceDocumentIds || []),
+      guide.createdAt || Date.now(),
+      guide.updatedAt || Date.now()
+    );
+  }
+
+  public deleteStudyGuide(id: string): boolean {
+    if (!this.db) return false;
+    this.db.prepare("DELETE FROM study_guides WHERE id = ?").run(id);
+    return true;
+  }
+
+  public getPresentations(courseId?: string): any[] {
+    if (!this.db) return [];
+    const sql = courseId
+      ? "SELECT * FROM presentations WHERE course_id = ? ORDER BY updated_at DESC"
+      : "SELECT * FROM presentations ORDER BY updated_at DESC";
+    const stmt = this.db.prepare(sql);
+    const rows = (courseId ? stmt.all(courseId) : stmt.all()) as any[];
+    return rows.map((r) => ({
+      id: r.id,
+      courseId: r.course_id,
+      title: r.title,
+      slides: JSON.parse(r.slides_json || "[]"),
+      sourceDocumentId: r.source_document_id,
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+    }));
+  }
+
+  public upsertPresentation(pres: any): void {
+    if (!this.db) return;
+    this.db.prepare(`
+      INSERT INTO presentations (id, course_id, title, slides_json, source_document_id, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        course_id=excluded.course_id,
+        title=excluded.title,
+        slides_json=excluded.slides_json,
+        source_document_id=excluded.source_document_id,
+        updated_at=excluded.updated_at
+    `).run(
+      pres.id,
+      pres.courseId || null,
+      pres.title,
+      JSON.stringify(pres.slides || []),
+      pres.sourceDocumentId || null,
+      pres.createdAt || Date.now(),
+      pres.updatedAt || Date.now()
+    );
+  }
+
+  public deletePresentation(id: string): boolean {
+    if (!this.db) return false;
+    this.db.prepare("DELETE FROM presentations WHERE id = ?").run(id);
+    return true;
+  }
+
+  public getLessonPlans(courseId?: string): any[] {
+    if (!this.db) return [];
+    const sql = courseId
+      ? "SELECT * FROM lesson_plans WHERE course_id = ? ORDER BY updated_at DESC"
+      : "SELECT * FROM lesson_plans ORDER BY updated_at DESC";
+    const stmt = this.db.prepare(sql);
+    const rows = (courseId ? stmt.all(courseId) : stmt.all()) as any[];
+    return rows.map((r) => ({
+      id: r.id,
+      courseId: r.course_id,
+      title: r.title,
+      objectives: JSON.parse(r.objectives_json || "[]"),
+      materials: JSON.parse(r.materials_json || "[]"),
+      activities: JSON.parse(r.activities_json || "[]"),
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+    }));
+  }
+
+  public upsertLessonPlan(plan: any): void {
+    if (!this.db) return;
+    this.db.prepare(`
+      INSERT INTO lesson_plans (id, course_id, title, objectives_json, materials_json, activities_json, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        course_id=excluded.course_id,
+        title=excluded.title,
+        objectives_json=excluded.objectives_json,
+        materials_json=excluded.materials_json,
+        activities_json=excluded.activities_json,
+        updated_at=excluded.updated_at
+    `).run(
+      plan.id,
+      plan.courseId || null,
+      plan.title,
+      JSON.stringify(plan.objectives || []),
+      JSON.stringify(plan.materials || []),
+      JSON.stringify(plan.activities || []),
+      plan.createdAt || Date.now(),
+      plan.updatedAt || Date.now()
+    );
+  }
+
+  public deleteLessonPlan(id: string): boolean {
+    if (!this.db) return false;
+    this.db.prepare("DELETE FROM lesson_plans WHERE id = ?").run(id);
+    return true;
+  }
+
+  public getChoiceBoards(courseId?: string): any[] {
+    if (!this.db) return [];
+    const sql = courseId
+      ? "SELECT * FROM choice_boards WHERE course_id = ? ORDER BY updated_at DESC"
+      : "SELECT * FROM choice_boards ORDER BY updated_at DESC";
+    const stmt = this.db.prepare(sql);
+    const rows = (courseId ? stmt.all(courseId) : stmt.all()) as any[];
+    return rows.map((r) => ({
+      id: r.id,
+      courseId: r.course_id,
+      title: r.title,
+      grid: JSON.parse(r.grid_json || "[]"),
+      surveyResponses: JSON.parse(r.survey_responses_json || "[]"),
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+    }));
+  }
+
+  public upsertChoiceBoard(board: any): void {
+    if (!this.db) return;
+    this.db.prepare(`
+      INSERT INTO choice_boards (id, course_id, title, grid_json, survey_responses_json, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        course_id=excluded.course_id,
+        title=excluded.title,
+        grid_json=excluded.grid_json,
+        survey_responses_json=excluded.survey_responses_json,
+        updated_at=excluded.updated_at
+    `).run(
+      board.id,
+      board.courseId || null,
+      board.title,
+      JSON.stringify(board.grid || []),
+      JSON.stringify(board.surveyResponses || []),
+      board.createdAt || Date.now(),
+      board.updatedAt || Date.now()
+    );
+  }
+
+  public deleteChoiceBoard(id: string): boolean {
+    if (!this.db) return false;
+    this.db.prepare("DELETE FROM choice_boards WHERE id = ?").run(id);
+    return true;
+  }
+
+  public getStudySessions(courseId?: string): any[] {
+    if (!this.db) return [];
+    const sql = courseId
+      ? "SELECT * FROM study_sessions WHERE course_id = ? ORDER BY created_at DESC"
+      : "SELECT * FROM study_sessions ORDER BY created_at DESC";
+    const stmt = this.db.prepare(sql);
+    const rows = (courseId ? stmt.all(courseId) : stmt.all()) as any[];
+    return rows.map((r) => ({
+      id: r.id,
+      courseId: r.course_id,
+      deckId: r.deck_id,
+      durationSeconds: r.duration_seconds,
+      score: r.score,
+      notes: r.notes,
+      createdAt: r.created_at,
+    }));
+  }
+
+  public recordStudySession(session: any): void {
+    if (!this.db) return;
+    this.db.prepare(`
+      INSERT INTO study_sessions (id, course_id, deck_id, duration_seconds, score, notes, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      session.id || `sess_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      session.courseId || null,
+      session.deckId || null,
+      session.durationSeconds || 0,
+      session.score ?? null,
+      session.notes || null,
+      session.createdAt || Date.now()
+    );
+  }
+
+  public getQuizQuestions(courseId?: string): any[] {
+    if (!this.db) return [];
+    const sql = courseId
+      ? "SELECT * FROM quiz_questions WHERE course_id = ? ORDER BY created_at DESC"
+      : "SELECT * FROM quiz_questions ORDER BY created_at DESC";
+    const stmt = this.db.prepare(sql);
+    const rows = (courseId ? stmt.all(courseId) : stmt.all()) as any[];
+    return rows.map((r) => ({
+      id: r.id,
+      courseId: r.course_id,
+      assignmentId: r.assignment_id,
+      question: r.question,
+      options: JSON.parse(r.options_json || "[]"),
+      answer: r.answer,
+      explanation: r.explanation,
+      sourceRef: r.source_ref_json ? JSON.parse(r.source_ref_json) : null,
+      createdAt: r.created_at,
+    }));
+  }
+
+  public upsertQuizQuestion(q: any): void {
+    if (!this.db) return;
+    this.db.prepare(`
+      INSERT INTO quiz_questions (id, course_id, assignment_id, question, options_json, answer, explanation, source_ref_json, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        course_id=excluded.course_id,
+        assignment_id=excluded.assignment_id,
+        question=excluded.question,
+        options_json=excluded.options_json,
+        answer=excluded.answer,
+        explanation=excluded.explanation,
+        source_ref_json=excluded.source_ref_json
+    `).run(
+      q.id || `quiz_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      q.courseId || null,
+      q.assignmentId || null,
+      q.question,
+      JSON.stringify(q.options || []),
+      q.answer,
+      q.explanation || null,
+      q.sourceRef ? JSON.stringify(q.sourceRef) : null,
+      q.createdAt || Date.now()
     );
   }
 

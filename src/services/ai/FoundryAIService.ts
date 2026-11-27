@@ -625,7 +625,7 @@ class FoundryAIServiceImpl {
 
     // 4.5. Stage 3 — RAG & Persistent AI Memory Injection
     const activeCourse = sharedContextManager.getContext().activeCourseId;
-    const ragResult = await ragEngine.retrieve(userMessage.content, { courseId: activeCourse || undefined });
+    const ragResult = await ragEngine.retrieve(userPrompt, { courseId: activeCourse || undefined });
     const relevantMemories = await aiMemoryManager.getRelevantMemories({ courseId: activeCourse || undefined });
     const memoryText = aiMemoryManager.formatMemoriesForPrompt(relevantMemories);
 
@@ -1033,6 +1033,7 @@ class FoundryAIServiceImpl {
         id: c.id,
         kind: "file" as const,
         title: c.metadata.documentName || "Course Document",
+        detail: c.metadata.sectionHeading || (c.metadata.pageNumber ? `Page ${c.metadata.pageNumber}` : "Source Excerpt"),
         subtitle: c.metadata.sectionHeading || (c.metadata.pageNumber ? `Page ${c.metadata.pageNumber}` : "Source Excerpt"),
         content: c.content,
         removable: false,

@@ -23,6 +23,7 @@ export const FOUNDRY_EVENTS = {
   BRIDGE_REQUEST: "bridge:request",
   BRIDGE_RESPONSE: "bridge:response",
   BRIDGE_ERROR: "bridge:error",
+  STORAGE_STATE_CHANGED: "storage:state-changed",
 } as const;
 
 export type FoundryEventName =

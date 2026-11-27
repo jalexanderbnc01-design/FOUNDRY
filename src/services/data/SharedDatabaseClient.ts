@@ -371,6 +371,24 @@ class SharedDatabaseClient {
     return false;
   }
 
+  // --- Academic Notes ---
+  public async upsertNote(note: Partial<AcademicNote> & { title: string; content: string }): Promise<AcademicNote | null> {
+    try {
+      const resp = await fetch("/api/academic/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(note),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.ok && data.note) {
+          return data.note;
+        }
+      }
+    } catch {}
+    return null;
+  }
+
   public async getStats(): Promise<any> {
     try {
       const resp = await fetch("/api/data/stats");

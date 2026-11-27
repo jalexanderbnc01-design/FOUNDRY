@@ -31,48 +31,63 @@ export interface SyncTarget {
 
 export class SynchronizationManager {
   private targets: Map<string, SyncTarget> = new Map([
-    {
-      id: "sync_academic_courses",
-      name: "Academic Courses & Context",
-      provider: "sqlite",
-      type: "course",
-      status: "synchronized",
-      lastSyncedAt: Date.now(),
-      revision: 1,
-    },
-    {
-      id: "sync_knowledge_base",
-      name: "Knowledge Base Documents",
-      provider: "local",
-      type: "document",
-      status: "synchronized",
-      lastSyncedAt: Date.now(),
-      revision: 1,
-    },
-    {
-      id: "sync_google_drive",
-      name: "Google Drive Course Files",
-      provider: "google",
-      type: "document",
-      status: "available",
-      revision: 1,
-    },
-    {
-      id: "sync_google_calendar",
-      name: "Google Calendar Deadlines",
-      provider: "google",
-      type: "calendar",
-      status: "available",
-      revision: 1,
-    },
-    {
-      id: "sync_google_tasks",
-      name: "Google Tasks Milestone Sync",
-      provider: "google",
-      type: "tasks",
-      status: "available",
-      revision: 1,
-    },
+    [
+      "sync_academic_courses",
+      {
+        id: "sync_academic_courses",
+        name: "Academic Courses & Context",
+        provider: "sqlite",
+        type: "course",
+        status: "synchronized",
+        lastSyncedAt: Date.now(),
+        revision: 1,
+      },
+    ],
+    [
+      "sync_knowledge_base",
+      {
+        id: "sync_knowledge_base",
+        name: "Knowledge Base Documents",
+        provider: "local",
+        type: "document",
+        status: "synchronized",
+        lastSyncedAt: Date.now(),
+        revision: 1,
+      },
+    ],
+    [
+      "sync_google_drive",
+      {
+        id: "sync_google_drive",
+        name: "Google Drive Course Files",
+        provider: "google",
+        type: "document",
+        status: "available",
+        revision: 1,
+      },
+    ],
+    [
+      "sync_google_calendar",
+      {
+        id: "sync_google_calendar",
+        name: "Google Calendar Deadlines",
+        provider: "google",
+        type: "calendar",
+        status: "available",
+        revision: 1,
+      },
+    ],
+    [
+      "sync_google_tasks",
+      {
+        id: "sync_google_tasks",
+        name: "Google Tasks Milestone Sync",
+        provider: "google",
+        type: "tasks",
+        status: "available",
+        revision: 1,
+      },
+    ],
   ]);
 
   public getTargets(): SyncTarget[] {
